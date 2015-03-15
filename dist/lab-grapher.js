@@ -322,6 +322,7 @@ module.exports = function Graph(idOrElement, options, message) {
         // element. hs means whn the containing element is smaller the
         // foint-size of the labels in thegraph will be smaller.
         fontScaleRelativeToParent: true,
+        hideAxisValues: false,
 
         enableAutoScaleButton: true,
         enableAxisScaling: true,
@@ -723,8 +724,8 @@ module.exports = function Graph(idOrElement, options, message) {
       padding = {
         "top":    options.title  ? titleFontSizeInPixels*1.8 : fontSizeInPixels,
         "right":  xAxisLabelHorizontalPadding,
-        "bottom": axisFontSizeInPixels*1.25,
-        "left":   yAxisNumberWidth*1.25
+        "bottom": options.hideAxisValues ? fontSizeInPixels : axisFontSizeInPixels*1.25,
+        "left":   options.hideAxisValues ? fontSizeInPixels : yAxisNumberWidth*1.25
       };
       xTickCount = Math.max(6, options.xTickCount/2);
       yTickCount = Math.max(6, options.yTickCount/2);
@@ -734,8 +735,8 @@ module.exports = function Graph(idOrElement, options, message) {
       padding = {
         "top":    options.title  ? titleFontSizeInPixels*1.8 : fontSizeInPixels,
         "right":  xAxisLabelHorizontalPadding,
-        "bottom": options.xlabel ? xAxisVerticalPadding : axisFontSizeInPixels*1.25,
-        "left":   options.ylabel ? yAxisHorizontalPadding : yAxisNumberWidth
+        "bottom": options.hideAxisValues ? fontSizeInPixels:(options.xlabel ? xAxisVerticalPadding : axisFontSizeInPixels*1.25),
+        "left":   options.hideAxisValues ? fontSizeInPixels:(options.ylabel ? yAxisHorizontalPadding : yAxisNumberWidth)
       };
       break;
 
@@ -743,8 +744,8 @@ module.exports = function Graph(idOrElement, options, message) {
       padding = {
         "top":    options.title  ? titleFontSizeInPixels*1.8 : fontSizeInPixels,
         "right":  xAxisLabelHorizontalPadding,
-        "bottom": options.xlabel ? xAxisVerticalPadding : axisFontSizeInPixels*1.25,
-        "left":   options.ylabel ? yAxisHorizontalPadding : yAxisNumberWidth
+        "bottom": options.hideAxisValues ? fontSizeInPixels:(options.xlabel ? xAxisVerticalPadding : axisFontSizeInPixels*1.25),
+        "left":   options.hideAxisValues ? fontSizeInPixels:(options.ylabel ? yAxisHorizontalPadding : yAxisNumberWidth)
       };
       break;
     }
@@ -1156,6 +1157,7 @@ module.exports = function Graph(idOrElement, options, message) {
 
     // Add the x-axis label
     if (sizeType.value > 2) {
+      if(!options.hideAxisValues){
       xlabel = vis.append("text")
           .attr("class", "axis")
           .attr("class", "xlabel")
@@ -1163,7 +1165,18 @@ module.exports = function Graph(idOrElement, options, message) {
           .attr("x", size.width/2)
           .attr("y", size.height)
           .attr("dy", xAxisLabelBaseline + "px")
+          .style("text-anchor","middle");}
+          else{
+            
+      xlabel = vis.append("text")
+          .attr("class", "axis")
+          .attr("class", "xlabel")
+          .text(options.xlabel)
+          .attr("x", size.width/2)
+          .attr("y", size.height-20)
+          .attr("dy", xAxisLabelBaseline + "px")
           .style("text-anchor","middle");
+          }
     }
 
     // add y-axis label
@@ -1252,22 +1265,38 @@ module.exports = function Graph(idOrElement, options, message) {
     }
 
     if (options.xlabel && sizeType.value > 2) {
+     if(!options.hideAxisValues){
       xlabel
           .attr("x", size.width/2)
           .attr("y", size.height)
           .attr("dy", xAxisLabelBaseline + "px");
       xAxisDraggableTooltip
+          .text("");}
+          else{
+            xlabel
+          .attr("x", size.width/2)
+          .attr("y", size.height-30)
+          .attr("dy", xAxisLabelBaseline + "px");
+      xAxisDraggableTooltip
           .text("");
+          }
     } else {
       xAxisDraggableTooltip
           .text(options.xlabel);
     }
 
     if (options.ylabel && sizeType.value > 2) {
+      if(!options.hideAxisValues){
       ylabel
           .attr("transform","translate(" + yAxisLabelBaseline + " " + size.height/2+") rotate(-90)");
       yAxisDraggableTooltip
+          .text("");}
+          else{
+            ylabel
+          .attr("transform","translate(" + (yAxisLabelBaseline+30) + " " + size.height/2+") rotate(-90)");
+      yAxisDraggableTooltip
           .text("");
+          }
     } else {
       yAxisDraggableTooltip
         .text(options.ylabel);
@@ -1339,7 +1368,7 @@ module.exports = function Graph(idOrElement, options, message) {
         .attr("y1", 0)
         .attr("y2", size.height);
 
-    if (sizeType.value > 1) {
+    if (sizeType.value > 1 && !options.hideAxisValues) {
       gxe.append("text")
           .attr("class", "axis")
           .attr("y", size.height)
@@ -1378,7 +1407,8 @@ module.exports = function Graph(idOrElement, options, message) {
           gye = gye.filter(function(d) {
             return !!d.toString().match(/(\.[0]*|^)[125]/);});
         }
-      }
+      } 
+      if(!options.hideAxisValues){
       gye.append("text")
           .attr("class", "axis")
           .attr("x", -axisFontSizeInPixels/4 + "px")
@@ -1387,7 +1417,7 @@ module.exports = function Graph(idOrElement, options, message) {
           .style("cursor", "ns-resize")
           .text(fy)
           .on("mouseover", function() { d3.select(this).style("font-weight", "bold");})
-          .on("mouseout",  function() { d3.select(this).style("font-weight", "normal");});
+          .on("mouseout",  function() { d3.select(this).style("font-weight", "normal");});}
     }
 
     gy.exit().remove();
