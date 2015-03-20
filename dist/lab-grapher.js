@@ -1,4 +1,4 @@
-!function(e){"object"==typeof exports?module.exports=e():"function"==typeof define&&define.amd?define(e):"undefined"!=typeof window?window.LabGrapher=e():"undefined"!=typeof global?global.LabGrapher=e():"undefined"!=typeof self&&(self.LabGrapher=e())}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.LabGrapher = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 module.exports.numberWidthUsingFormatter = function(elem, cx, cy, fontSizeInPixels, numberStr) {
   var testSVG,
       testText,
@@ -322,6 +322,7 @@ module.exports = function Graph(idOrElement, options, message) {
         // element. hs means whn the containing element is smaller the
         // foint-size of the labels in thegraph will be smaller.
         fontScaleRelativeToParent: true,
+        hideAxisValues: false,
 
         enableAutoScaleButton: true,
         enableAxisScaling: true,
@@ -701,53 +702,49 @@ module.exports = function Graph(idOrElement, options, message) {
     yAxisLabelBaseline     = -(yAxisDraggableWidth+yAxisNumberHeight/4);
 
     switch(sizeType.value) {
-      case 0:         // icon
-      padding = {
-        "top":    halfFontSizeInPixels,
-        "right":  halfFontSizeInPixels,
-        "bottom": fontSizeInPixels,
-        "left":   fontSizeInPixels
-      };
-      break;
-
-      case 1:         // tiny
-      padding = {
-        "top":    options.title  ? titleFontSizeInPixels*1.8 : fontSizeInPixels,
-        "right":  halfFontSizeInPixels,
-        "bottom": fontSizeInPixels,
-        "left":   fontSizeInPixels
-      };
-      break;
-
-      case 2:         // small
-      padding = {
-        "top":    options.title  ? titleFontSizeInPixels*1.8 : fontSizeInPixels,
-        "right":  xAxisLabelHorizontalPadding,
-        "bottom": axisFontSizeInPixels*1.25,
-        "left":   yAxisNumberWidth*1.25
-      };
-      xTickCount = Math.max(6, options.xTickCount/2);
-      yTickCount = Math.max(6, options.yTickCount/2);
-      break;
-
-      case 3:         // medium
-      padding = {
-        "top":    options.title  ? titleFontSizeInPixels*1.8 : fontSizeInPixels,
-        "right":  xAxisLabelHorizontalPadding,
-        "bottom": options.xlabel ? xAxisVerticalPadding : axisFontSizeInPixels*1.25,
-        "left":   options.ylabel ? yAxisHorizontalPadding : yAxisNumberWidth
-      };
-      break;
-
-      default:         // large
-      padding = {
-        "top":    options.title  ? titleFontSizeInPixels*1.8 : fontSizeInPixels,
-        "right":  xAxisLabelHorizontalPadding,
-        "bottom": options.xlabel ? xAxisVerticalPadding : axisFontSizeInPixels*1.25,
-        "left":   options.ylabel ? yAxisHorizontalPadding : yAxisNumberWidth
-      };
-      break;
-    }
+   case 0: // icon
+   padding = {
+    "top": halfFontSizeInPixels,
+    "right": halfFontSizeInPixels,
+    "bottom": fontSizeInPixels,
+    "left": fontSizeInPixels
+    };
+  break;
+  case 1: // tiny
+  padding = {
+  "top": options.title ? titleFontSizeInPixels*1.8 : fontSizeInPixels,
+  "right": halfFontSizeInPixels,
+  "bottom": fontSizeInPixels,
+  "left": fontSizeInPixels
+ };
+  break;
+  case 2: // small
+  padding = {
+  "top": options.title ? titleFontSizeInPixels*1.8 : fontSizeInPixels,
+  "right": xAxisLabelHorizontalPadding,
+  "bottom": options.hideAxisValues ? fontSizeInPixels : axisFontSizeInPixels*1.25,
+  "left": options.hideAxisValues ? fontSizeInPixels : yAxisNumberWidth*1.25
+  };
+  xTickCount = Math.max(6, options.xTickCount/2);
+  yTickCount = Math.max(6, options.yTickCount/2);
+ break;
+  case 3: // medium
+  padding = {
+  "top": options.title ? titleFontSizeInPixels*1.8 : fontSizeInPixels,
+  "right": xAxisLabelHorizontalPadding,
+  "bottom": options.hideAxisValues ? fontSizeInPixels:(options.xlabel ? xAxisVerticalPadding : axisFontSizeInPixels*1.25),
+  "left": options.hideAxisValues ? fontSizeInPixels:(options.ylabel ? yAxisHorizontalPadding : yAxisNumberWidth)
+  };
+  break;
+  default: // large
+  padding = {
+  "top": options.title ? titleFontSizeInPixels*1.8 : fontSizeInPixels,
+  "right": xAxisLabelHorizontalPadding,
+  "bottom": options.hideAxisValues ? fontSizeInPixels:(options.xlabel ? xAxisVerticalPadding : axisFontSizeInPixels*1.25),
+  "left": options.hideAxisValues ? fontSizeInPixels:(options.ylabel ? yAxisHorizontalPadding : yAxisNumberWidth)
+  };
+ break;
+  }
 
     if (sizeType.value > 2 ) {
       padding.top += (titles.length-1) * sizeType.value/3 * sizeType.value/3 * fontSizeInPixels;
@@ -1156,15 +1153,26 @@ module.exports = function Graph(idOrElement, options, message) {
 
     // Add the x-axis label
     if (sizeType.value > 2) {
-      xlabel = vis.append("text")
-          .attr("class", "axis")
-          .attr("class", "xlabel")
-          .text(options.xlabel)
-          .attr("x", size.width/2)
-          .attr("y", size.height)
-          .attr("dy", xAxisLabelBaseline + "px")
-          .style("text-anchor","middle");
-    }
+    if(!options.hideAxisValues){
+  xlabel = vis.append("text")
+  .attr("class", "axis")
+  .attr("class", "xlabel")
+  .text(options.xlabel)
+  .attr("x", size.width/2)
+  .attr("y", size.height)
+  .attr("dy", xAxisLabelBaseline + "px")
+  .style("text-anchor","middle");}
+ else{
+  xlabel = vis.append("text")
+  .attr("class", "axis")
+  .attr("class", "xlabel")
+  .text(options.xlabel)
+  .attr("x", size.width/2)
+  .attr("y", size.height-20)
+  .attr("dy", xAxisLabelBaseline + "px")
+  .style("text-anchor","middle");
+  }
+ }
 
     // add y-axis label
     if (sizeType.value > 2) {
@@ -1252,26 +1260,42 @@ module.exports = function Graph(idOrElement, options, message) {
     }
 
     if (options.xlabel && sizeType.value > 2) {
-      xlabel
-          .attr("x", size.width/2)
-          .attr("y", size.height)
-          .attr("dy", xAxisLabelBaseline + "px");
-      xAxisDraggableTooltip
-          .text("");
-    } else {
-      xAxisDraggableTooltip
-          .text(options.xlabel);
-    }
+if(!options.hideAxisValues){
+xlabel
+.attr("x", size.width/2)
+.attr("y", size.height)
+.attr("dy", xAxisLabelBaseline + "px");
+xAxisDraggableTooltip
+.text("");}
+else{
+xlabel
+.attr("x", size.width/2)
+.attr("y", size.height-30)
+.attr("dy", xAxisLabelBaseline + "px");
+xAxisDraggableTooltip
+.text("");
+}
+} else {
+xAxisDraggableTooltip
+.text(options.xlabel);
+}
+if (options.ylabel && sizeType.value > 2) {
+if(!options.hideAxisValues){
+ylabel
+.attr("transform","translate(" + yAxisLabelBaseline + " " + size.height/2+") rotate(-90)");
+yAxisDraggableTooltip
+.text("");}
+else{
+ylabel
+.attr("transform","translate(" + (yAxisLabelBaseline+30) + " " + size.height/2+") rotate(-90)");
+yAxisDraggableTooltip
+.text("");
+}
+} else {
+yAxisDraggableTooltip
+.text(options.ylabel);
+}
 
-    if (options.ylabel && sizeType.value > 2) {
-      ylabel
-          .attr("transform","translate(" + yAxisLabelBaseline + " " + size.height/2+") rotate(-90)");
-      yAxisDraggableTooltip
-          .text("");
-    } else {
-      yAxisDraggableTooltip
-        .text(options.ylabel);
-    }
 
     notification
       .attr("x", size.width/2)
@@ -1339,16 +1363,16 @@ module.exports = function Graph(idOrElement, options, message) {
         .attr("y1", 0)
         .attr("y2", size.height);
 
-    if (sizeType.value > 1) {
-      gxe.append("text")
-          .attr("class", "axis")
-          .attr("y", size.height)
-          .attr("dy", axisFontSizeInPixels + "px")
-          .attr("text-anchor", "middle")
-          .text(fx)
-          .on("mouseover", function() { d3.select(this).style("font-weight", "bold");})
-          .on("mouseout",  function() { d3.select(this).style("font-weight", "normal");});
-    }
+    if (sizeType.value > 1 && !options.hideAxisValues) {
+gxe.append("text")
+.attr("class", "axis")
+.attr("y", size.height)
+.attr("dy", axisFontSizeInPixels + "px")
+.attr("text-anchor", "middle")
+.text(fx)
+.on("mouseover", function() { d3.select(this).style("font-weight", "bold");})
+.on("mouseout", function() { d3.select(this).style("font-weight", "normal");});
+}
 
     gx.exit().remove();
 
@@ -1379,15 +1403,16 @@ module.exports = function Graph(idOrElement, options, message) {
             return !!d.toString().match(/(\.[0]*|^)[125]/);});
         }
       }
-      gye.append("text")
-          .attr("class", "axis")
-          .attr("x", -axisFontSizeInPixels/4 + "px")
-          .attr("dy", ".35em")
-          .attr("text-anchor", "end")
-          .style("cursor", "ns-resize")
-          .text(fy)
-          .on("mouseover", function() { d3.select(this).style("font-weight", "bold");})
-          .on("mouseout",  function() { d3.select(this).style("font-weight", "normal");});
+      if(!options.hideAxisValues){
+  gye.append("text")
+  .attr("class", "axis")
+  .attr("x", -axisFontSizeInPixels/4 + "px")
+  .attr("dy", ".35em")
+  .attr("text-anchor", "end")
+  .style("cursor", "ns-resize")
+  .text(fy)
+  .on("mouseover", function() { d3.select(this).style("font-weight", "bold");})
+  .on("mouseout", function() { d3.select(this).style("font-weight", "normal");});}
     }
 
     gy.exit().remove();
@@ -3065,6 +3090,7 @@ module.exports = function Graph(idOrElement, options, message) {
   return api;
 };
 
+
 },{"./axis":1,"./i18n":3}],3:[function(require,module,exports){
 var DEFAULT_LANG = 'en-US';
 
@@ -3121,7 +3147,5 @@ module.exports = require('./lib/graph');
 // before calling Graph constructor.
 module.exports.i18n = require('./lib/i18n');
 
-},{"./lib/graph":2,"./lib/i18n":3}]},{},[5])
-(5)
+},{"./lib/graph":2,"./lib/i18n":3}]},{},[5])(5)
 });
-;
