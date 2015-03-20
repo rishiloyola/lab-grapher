@@ -1168,7 +1168,7 @@ module.exports = function Graph(idOrElement, options, message) {
   .attr("class", "xlabel")
   .text(options.xlabel)
   .attr("x", size.width/2)
-  .attr("y", size.height-22)
+  .attr("y", size.height-25)
   .attr("dy", xAxisLabelBaseline + "px")
   .style("text-anchor","middle");
   }
@@ -1270,7 +1270,7 @@ xAxisDraggableTooltip
 else{
 xlabel
 .attr("x", size.width/2)
-.attr("y", size.height-30)
+.attr("y", size.height-25)
 .attr("dy", xAxisLabelBaseline + "px");
 xAxisDraggableTooltip
 .text("");
