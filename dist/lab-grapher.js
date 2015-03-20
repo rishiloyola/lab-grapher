@@ -1168,7 +1168,7 @@ module.exports = function Graph(idOrElement, options, message) {
   .attr("class", "xlabel")
   .text(options.xlabel)
   .attr("x", size.width/2)
-  .attr("y", size.height-20)
+  .attr("y", size.height-22)
   .attr("dy", xAxisLabelBaseline + "px")
   .style("text-anchor","middle");
   }
